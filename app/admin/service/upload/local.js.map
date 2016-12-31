@@ -1,0 +1,32 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../../src/admin/service/upload/local.js"
+    ],
+    "names": [
+        "moveFile",
+        "think",
+        "promisify",
+        "rename",
+        "uploadMethod",
+        "file",
+        "name",
+        "basename",
+        "extname",
+        "destDir",
+        "formatNow",
+        "destPath",
+        "join",
+        "UPLOAD_PATH",
+        "isDir",
+        "mkdir",
+        "Error",
+        "run",
+        "config"
+    ],
+    "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;AAAA;;;;AACA;;;;AACA;;;;;;AAEA,IAAMA,WAAWC,MAAMC,SAAN,CAAgB,aAAGC,MAAnB,eAAjB;;;;;;;;;;mBAEQC,Y;2FAAaC,I;UAAOC,I,SAAAA,I;;;;;;AACpBC,sB,GAAWD,OAAOA,OAAO,eAAKE,OAAL,CAAaH,IAAb,CAAd,GAAmC,eAAKE,QAAL,CAAcF,IAAd,C;AAC9CI,qB,GAAU,KAAKC,SAAL,E;AACVC,sB,GAAW,eAAKC,IAAL,CAAWX,MAAMY,WAAjB,EAA8BJ,OAA9B,C;;AACf,kBAAI,CAACR,MAAMa,KAAN,CAAYH,QAAZ,CAAL,EAA6B;AAC3BV,sBAAMc,KAAN,CAAYJ,QAAZ;AACD;;;;qBAGOX,SAASK,IAAT,EAAe,eAAKO,IAAL,CAAUD,QAAV,EAAoBJ,QAApB,CAAf,C;;;+CACC,eAAKK,IAAL,CAAU,gBAAV,EAA4BH,OAA5B,EAAqCF,QAArC,C;;;;;oBAEDS,MAAM,wBAAN,C;;;;;;;;;;;;;;;;;mBAIJC,G;6FAAIZ,I,EAAMa,M;;;;;;qBACD,KAAKd,YAAL,CAAkBC,IAAlB,EAAwBa,MAAxB,C",
+    "file": "../../../../src/admin/service/upload/local.js",
+    "sourcesContent": [
+        "import path from 'path';\nimport fs from 'fs';\nimport Base from './base';\n\nconst moveFile = think.promisify(fs.rename, fs);\nexport default class extends Base {\n  async uploadMethod(file, {name}) {\n    let basename = name ? name + path.extname(file) : path.basename(file);\n    let destDir = this.formatNow();\n    let destPath = path.join( think.UPLOAD_PATH, destDir );\n    if( !think.isDir(destPath) ) {\n      think.mkdir(destPath);\n    }\n\n    try {\n      await moveFile(file, path.join(destPath, basename));\n      return path.join('/static/upload', destDir, basename);\n    } catch(e) {\n      throw Error('FILE_UPLOAD_MOVE_ERROR');\n    }\n  }\n\n  async run(file, config) {\n    return await this.uploadMethod(file, config);\n  }\n}"
+    ]
+}
