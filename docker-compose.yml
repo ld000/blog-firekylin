@@ -1,0 +1,22 @@
+version: '2'
+services:
+  mysql:
+    image: hub.c.163.com/ld00000/mysql:5.7.16-0.0.1
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=passw0rd
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+
+  blog:
+    build: ./
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - 8360:8360
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /usr/share/nginx/html/blog:/blog
